@@ -14,7 +14,6 @@ import BetterMap from "../../../utils/BetterMap";
 import HouseCard from "./house-card/HouseCard";
 import {land, port} from "./regionTypes";
 import PlanningRestriction from "./westeros-card/planning-restriction/PlanningRestriction";
-import EntireGame from "../../EntireGame";
 
 export const MAX_WILDLING_STRENGTH = 12;
 
@@ -36,6 +35,14 @@ export default class Game {
     skipRavenPhase: boolean;
     structuresCountNeededToWin: number;
     maxTurns: number;
+
+    /**
+     * Contains the vassal relations of the game.
+     * `vassalRelations.get(lannister) == stark` means that
+     * the vassal house lannister is currently being commanded by
+     * stark.
+     */
+    vassalRelations = new BetterMap<House, House>();
 
     get ironThroneHolder(): House {
         return this.getTokenHolder(this.ironThroneTrack);
@@ -92,24 +99,6 @@ export default class Game {
 
     isAheadInTrack(track: House[], first: House, second: House): boolean {
         return track.indexOf(first) < track.indexOf(second);
-    }
-
-    getNextInTurnOrder(house: House | null, except: House | null = null): House {
-        const turnOrder = this.getTurnOrder();
-
-        if (house == null) {
-            return turnOrder[0];
-        }
-
-        const i = turnOrder.indexOf(house);
-
-        const nextHouse = turnOrder[(i + 1) % turnOrder.length];
-
-        if (nextHouse == except) {
-            return this.getNextInTurnOrder(nextHouse);
-        }
-
-        return nextHouse;
     }
 
     areVictoryConditionsFulfilled(): boolean {
@@ -323,7 +312,8 @@ export default class Game {
             starredOrderRestrictions: this.starredOrderRestrictions,
             skipRavenPhase: this.skipRavenPhase,
             structuresCountNeededToWin: this.structuresCountNeededToWin,
-            maxTurns: this.maxTurns
+            maxTurns: this.maxTurns,
+            vassalRelations: this.vassalRelations.map((key, value) => [key.id, value.id])
         };
     }
 
@@ -331,7 +321,7 @@ export default class Game {
         const game = new Game();
 
         game.lastUnitId = data.lastUnitId;
-        game.houses = new BetterMap(data.houses.map(h => [h.id, House.deserializeFromServer(h)]));
+        game.houses = new BetterMap(data.houses.map(h => [h.id, House.deserializeFromServer(game, h)]));
         game.world = World.deserializeFromServer(game, data.world);
         game.turn = data.turn;
         game.ironThroneTrack = data.ironThroneTrack.map(hid => game.houses.get(hid));
@@ -346,6 +336,7 @@ export default class Game {
         game.skipRavenPhase = data.skipRavenPhase;
         game.structuresCountNeededToWin = data.structuresCountNeededToWin;
         game.maxTurns = data.maxTurns;
+        game.vassalRelations = new BetterMap(data.vassalRelations.map(([vid, hid]) => [game.houses.get(vid), game.houses.get(hid)]));
 
         return game;
     }
@@ -368,4 +359,5 @@ export interface SerializedGame {
     skipRavenPhase: boolean;
     structuresCountNeededToWin: number;
     maxTurns: number;
+    vassalRelations: [string, string][];
 }

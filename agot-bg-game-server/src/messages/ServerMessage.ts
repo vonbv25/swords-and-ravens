@@ -8,7 +8,7 @@ import {UserSettings} from "./ClientMessage";
 
 export type ServerMessage = NewUser | HouseChosen | AuthenticationResponse | OrderPlaced | PlayerReady
     | HouseCardChosen | CombatImmediatelyKilledUnits | SupportDeclared | NewTurn | RemovePlacedOrder
-    | MoveUnits | CombatChangeArmy
+    | MoveUnits | CombatChangeArmy | VassalsClaimed
     | UnitsWounded | ChangeCombatHouseCard | BeginSeeTopWildlingCard
     | RavenOrderReplaced | ProceedWesterosCard | ChangeGarrison
     | BidDone | GameStateChange | SupplyAdjusted
@@ -223,4 +223,10 @@ interface NewPrivateChatRoom {
 interface GameSettingsChanged {
     type: "game-settings-changed";
     settings: any;
+}
+
+interface VassalsClaimed {
+    type: "vassals-claimed";
+    vassals: string[];
+    house: string;
 }

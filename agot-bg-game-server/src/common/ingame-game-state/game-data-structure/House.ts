@@ -3,6 +3,7 @@ import {observable} from "mobx";
 import BetterMap from "../../../utils/BetterMap";
 import UnitType from "./UnitType";
 import unitTypes from "./unitTypes";
+import Game from "./Game";
 
 export default class House {
     id: string;
@@ -35,7 +36,7 @@ export default class House {
         };
     }
 
-    static deserializeFromServer(data: SerializedHouse): House {
+    static deserializeFromServer(game: Game, data: SerializedHouse): House {
         return new House(
             data.id,
             data.name,

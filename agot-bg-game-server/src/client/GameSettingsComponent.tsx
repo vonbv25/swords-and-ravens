@@ -52,6 +52,14 @@ export default class GameSettingsComponent extends Component<GameSettingsCompone
                                 </select>
                             </Col>
                         </Row>
+                        <FormCheck
+                            id="vassals-setting"
+                            type="checkbox"
+                            label="Vassals"
+                            disabled={!this.canChangeGameSettings}
+                            checked={this.gameSettings.vassals}
+                            onChange={() => this.changeGameSettings(() => this.gameSettings.vassals = !this.gameSettings.vassals)}
+                        />
                     </>
                 )}
                 <FormCheck

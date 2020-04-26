@@ -6,7 +6,7 @@ import {HouseCardState} from "../common/ingame-game-state/game-data-structure/ho
 import {GameLogData} from "../common/ingame-game-state/game-data-structure/GameLog";
 import {UserSettings} from "./ClientMessage";
 
-export type ServerMessage = NewUser | HouseChosen | AuthenticationResponse | OrderPlaced | PlayerReady | PlayerUnready
+export type ServerMessage = NewUser | HouseChosen | AuthenticationResponse | OrderPlaced | PlayerReady
     | HouseCardChosen | CombatImmediatelyKilledUnits | SupportDeclared | NewTurn | RemovePlacedOrder
     | MoveUnits | CombatChangeArmy
     | UnitsWounded | ChangeCombatHouseCard | BeginSeeTopWildlingCard
@@ -51,11 +51,6 @@ interface RemovePlacedOrder {
 
 interface PlayerReady {
     type: "player-ready";
-    userId: string;
-}
-
-interface PlayerUnready {
-    type: "player-unready";
     userId: string;
 }
 

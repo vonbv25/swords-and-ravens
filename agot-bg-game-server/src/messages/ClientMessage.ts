@@ -3,7 +3,7 @@ export type ClientMessage = Ping | Authenticate | PlaceOrder | Ready | Unready |
     | ChooseTopWildlingCardAction | ReplaceOrder | SkipReplaceOrder | ResolveRaid | Bid | ChooseChoice
     | DecideBiggest | ReconcileArmies | Muster | ResolveTies | SelectUnits | LaunchGame | ChooseHouse
     | SelectOrders | SelectHouseCard | SelectRegion | ChangeSettings | CreatePrivateChatRoom | ChangeGameSettings
-    | CancelGame;
+    | CancelGame | Vote | LaunchCancelGameVote | CancelVote;
 
 interface Ping {
     type: "ping";
@@ -186,4 +186,19 @@ interface CreatePrivateChatRoom {
 interface KickPlayer {
     type: "kick-player";
     user: string;
+}
+
+interface Vote {
+    type: "vote";
+    vote: string;
+    choice: boolean;
+}
+
+interface LaunchCancelGameVote {
+    type: "launch-cancel-game-vote";
+}
+
+interface CancelVote {
+    type: "cancel-vote";
+    vote: string;
 }
